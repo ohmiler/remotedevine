@@ -3,105 +3,279 @@ import { Code2, Zap, Database, Download, Cloud, Users } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
-      {/* Hero Section */}
-      <header className="relative overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-3xl" />
-          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-pink-500/20 to-transparent rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 py-20">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-16">
-            <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/25">
-              <Code2 size={32} className="text-white" />
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#0a0a0f',
+      color: '#ffffff',
+      fontFamily: 'Inter, system-ui, sans-serif',
+    }}>
+      {/* Navbar */}
+      <nav style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        backgroundColor: 'rgba(10,10,15,0.9)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          padding: '0 24px',
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Code2 size={20} color="white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">PHP Playground</h1>
-              <p className="text-sm text-gray-400">Online PHP IDE</p>
+              <h1 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>PHP Playground</h1>
+              <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Online PHP IDE</p>
             </div>
           </div>
+          <Link
+            href="/editor"
+            style={{
+              padding: '10px 20px',
+              background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+              borderRadius: '10px',
+              fontWeight: 600,
+              fontSize: '14px',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            Open Editor
+          </Link>
+        </div>
+      </nav>
 
-          {/* Hero content */}
-          <div className="max-w-3xl">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-                Code PHP
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Directly in Your Browser
-              </span>
-            </h2>
-            <p className="text-xl text-gray-400 mb-8 leading-relaxed">
-              Write, run, and share PHP code instantly. No installation required.
-              Perfect for learning, prototyping, and quick experiments.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/editor"
-                className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
-              >
-                <Zap size={20} className="group-hover:animate-pulse" />
-                Start Coding Now
-              </Link>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 border border-gray-700 text-gray-300 font-semibold rounded-xl hover:border-purple-500/50 hover:text-white transition-all duration-300"
-              >
-                View on GitHub
-              </a>
-            </div>
+      {/* Hero Section */}
+      <section style={{
+        paddingTop: '160px',
+        paddingBottom: '80px',
+        paddingLeft: '24px',
+        paddingRight: '24px',
+      }}>
+        <div style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          textAlign: 'center',
+        }}>
+          <div style={{
+            display: 'inline-block',
+            padding: '8px 16px',
+            backgroundColor: 'rgba(139,92,246,0.1)',
+            border: '1px solid rgba(139,92,246,0.3)',
+            borderRadius: '20px',
+            color: '#a78bfa',
+            fontSize: '14px',
+            marginBottom: '32px',
+          }}>
+            ✨ Free & Open Source
+          </div>
+
+          <h1 style={{
+            fontSize: 'clamp(40px, 8vw, 72px)',
+            fontWeight: 800,
+            lineHeight: 1.1,
+            marginBottom: '24px',
+          }}>
+            <span style={{ color: 'white' }}>Code PHP</span>
+            <br />
+            <span style={{
+              background: 'linear-gradient(135deg, #a78bfa, #f472b6)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}>
+              Directly in Your Browser
+            </span>
+          </h1>
+
+          <p style={{
+            fontSize: '18px',
+            color: '#9ca3af',
+            maxWidth: '600px',
+            margin: '0 auto 40px',
+            lineHeight: 1.7,
+          }}>
+            Write, run, and share PHP code instantly. No installation required.
+            Perfect for learning, prototyping, and quick experiments.
+          </p>
+
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '16px',
+          }}>
+            <Link
+              href="/editor"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+                borderRadius: '12px',
+                fontWeight: 600,
+                fontSize: '16px',
+                color: 'white',
+                textDecoration: 'none',
+              }}
+            >
+              <Zap size={20} />
+              Start Coding Now
+            </Link>
+            <a
+              href="https://github.com/ohmiler/remotedevine"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '16px 32px',
+                border: '1px solid #374151',
+                borderRadius: '12px',
+                fontWeight: 600,
+                fontSize: '16px',
+                color: 'white',
+                textDecoration: 'none',
+              }}
+            >
+              View on GitHub
+            </a>
           </div>
         </div>
-      </header>
+      </section>
 
       {/* Features Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <h3 className="text-3xl font-bold text-center mb-4 text-white">
-          Everything You Need
-        </h3>
-        <p className="text-center text-gray-400 mb-16 max-w-2xl mx-auto">
-          A complete PHP development environment in your browser. No setup, no hassle.
-        </p>
+      <section style={{
+        padding: '80px 24px',
+        backgroundColor: 'rgba(139,92,246,0.03)',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <h2 style={{
+              fontSize: '32px',
+              fontWeight: 700,
+              marginBottom: '16px',
+            }}>
+              Everything You Need
+            </h2>
+            <p style={{
+              fontSize: '18px',
+              color: '#9ca3af',
+              maxWidth: '500px',
+              margin: '0 auto',
+            }}>
+              A complete PHP development environment in your browser.
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group p-6 bg-gray-800/50 rounded-2xl border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
-            >
-              <div className={`inline-flex p-3 rounded-xl mb-4 ${feature.color}`}>
-                {feature.icon}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '24px',
+          }}>
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                style={{
+                  padding: '28px',
+                  backgroundColor: 'rgba(255,255,255,0.03)',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '16px',
+                  background: feature.bgColor,
+                }}>
+                  {feature.icon}
+                </div>
+                <h3 style={{
+                  fontSize: '20px',
+                  fontWeight: 600,
+                  marginBottom: '8px',
+                }}>
+                  {feature.title}
+                </h3>
+                <p style={{
+                  fontSize: '15px',
+                  color: '#9ca3af',
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}>
+                  {feature.description}
+                </p>
               </div>
-              <h4 className="text-xl font-semibold text-white mb-2">
-                {feature.title}
-              </h4>
-              <p className="text-gray-400">{feature.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 to-pink-600 p-12 text-center">
-          <div className="absolute inset-0 bg-black/20" />
-          <div className="relative">
-            <h3 className="text-4xl font-bold text-white mb-4">
+      <section style={{ padding: '80px 24px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <div style={{
+            position: 'relative',
+            overflow: 'hidden',
+            borderRadius: '24px',
+            background: 'linear-gradient(135deg, #7c3aed, #db2777)',
+            padding: '60px 40px',
+            textAlign: 'center',
+          }}>
+            <h2 style={{
+              fontSize: '36px',
+              fontWeight: 700,
+              marginBottom: '16px',
+            }}>
               Ready to Start Coding?
-            </h3>
-            <p className="text-purple-100 mb-8 max-w-xl mx-auto">
+            </h2>
+            <p style={{
+              fontSize: '18px',
+              color: 'rgba(255,255,255,0.85)',
+              maxWidth: '500px',
+              margin: '0 auto 32px',
+            }}>
               Jump into the editor and start writing PHP code immediately.
               Your projects are saved automatically.
             </p>
             <Link
               href="/editor"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-600 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 shadow-lg"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '16px 32px',
+                backgroundColor: 'white',
+                color: '#7c3aed',
+                borderRadius: '12px',
+                fontWeight: 600,
+                fontSize: '16px',
+                textDecoration: 'none',
+              }}
             >
               <Code2 size={20} />
               Open Editor
@@ -111,15 +285,17 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 py-12">
-        <div className="max-w-7xl mx-auto px-6 text-center text-gray-500">
-          <p>
-            Built with ❤️ using Next.js, Monaco Editor, and php-wasm
-          </p>
-          <p className="mt-2 text-sm">
-            © {new Date().getFullYear()} PHP Playground. Open Source.
-          </p>
-        </div>
+      <footer style={{
+        padding: '32px 24px',
+        borderTop: '1px solid rgba(255,255,255,0.1)',
+        textAlign: 'center',
+      }}>
+        <p style={{ color: '#6b7280', fontSize: '14px', margin: 0 }}>
+          Built with ❤️ using Next.js, Monaco Editor, and php-wasm
+        </p>
+        <p style={{ color: '#4b5563', fontSize: '12px', marginTop: '8px' }}>
+          © {new Date().getFullYear()} PHP Playground. Open Source.
+        </p>
       </footer>
     </div>
   );
@@ -127,39 +303,39 @@ export default function HomePage() {
 
 const features = [
   {
-    icon: <Code2 size={24} className="text-white" />,
+    icon: <Code2 size={24} color="white" />,
     title: 'Monaco Editor',
-    description: 'The same powerful editor that powers VS Code, with PHP syntax highlighting and IntelliSense.',
-    color: 'bg-gradient-to-br from-blue-500 to-cyan-500',
+    description: 'The same powerful editor that powers VS Code, with PHP syntax highlighting.',
+    bgColor: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
   },
   {
-    icon: <Zap size={24} className="text-white" />,
+    icon: <Zap size={24} color="white" />,
     title: 'Instant Execution',
     description: 'Run your PHP code directly in the browser. No server setup required.',
-    color: 'bg-gradient-to-br from-yellow-500 to-orange-500',
+    bgColor: 'linear-gradient(135deg, #f59e0b, #ef4444)',
   },
   {
-    icon: <Database size={24} className="text-white" />,
+    icon: <Database size={24} color="white" />,
     title: 'SQL Database',
-    description: 'Built-in SQLite database with MySQL-compatible syntax for learning SQL.',
-    color: 'bg-gradient-to-br from-purple-500 to-pink-500',
+    description: 'Built-in SQLite database with MySQL-compatible syntax.',
+    bgColor: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
   },
   {
-    icon: <Download size={24} className="text-white" />,
+    icon: <Download size={24} color="white" />,
     title: 'Export Projects',
-    description: 'Download your complete project as a ZIP file, ready to deploy to any PHP hosting.',
-    color: 'bg-gradient-to-br from-green-500 to-emerald-500',
+    description: 'Download your complete project as a ZIP file.',
+    bgColor: 'linear-gradient(135deg, #10b981, #059669)',
   },
   {
-    icon: <Cloud size={24} className="text-white" />,
+    icon: <Cloud size={24} color="white" />,
     title: 'Cloud Storage',
-    description: 'Save your projects to the cloud and access them from anywhere.',
-    color: 'bg-gradient-to-br from-indigo-500 to-violet-500',
+    description: 'Save your projects to the cloud and access them anywhere.',
+    bgColor: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
   },
   {
-    icon: <Users size={24} className="text-white" />,
+    icon: <Users size={24} color="white" />,
     title: 'Share & Collaborate',
-    description: 'Share your projects with a public link. Perfect for tutorials and code reviews.',
-    color: 'bg-gradient-to-br from-rose-500 to-red-500',
+    description: 'Share your projects with a public link.',
+    bgColor: 'linear-gradient(135deg, #f43f5e, #e11d48)',
   },
 ];
