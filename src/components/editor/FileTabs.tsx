@@ -26,7 +26,13 @@ export function FileTabs() {
     };
 
     return (
-        <div className="flex bg-[#252526] border-b border-gray-700 overflow-x-auto">
+        <div style={{
+            display: 'flex',
+            backgroundColor: '#1f2937',
+            borderBottom: '1px solid #374151',
+            overflowX: 'auto',
+            flexShrink: 0,
+        }}>
             {openFiles.map((path) => {
                 const file = getFile(path);
                 const isActive = activeFile === path;
@@ -34,24 +40,47 @@ export function FileTabs() {
                 return (
                     <div
                         key={path}
-                        className={`
-              flex items-center gap-2 px-4 py-2 cursor-pointer border-r border-gray-700
-              transition-colors duration-150 min-w-[120px] max-w-[200px]
-              ${isActive
-                                ? 'bg-[#1e1e1e] text-white border-t-2 border-t-purple-500'
-                                : 'text-gray-400 hover:bg-[#2d2d2d]'
-                            }
-            `}
                         onClick={() => setActiveFile(path)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 16px',
+                            cursor: 'pointer',
+                            borderRight: '1px solid #374151',
+                            minWidth: '120px',
+                            maxWidth: '200px',
+                            backgroundColor: isActive ? '#111827' : 'transparent',
+                            color: isActive ? 'white' : '#9ca3af',
+                            borderTop: isActive ? '2px solid #8b5cf6' : '2px solid transparent',
+                        }}
                     >
-                        <span className="text-sm">{getFileIcon(path)}</span>
-                        <span className="flex-1 truncate text-sm">{file?.name || path}</span>
+                        <span style={{ fontSize: '14px' }}>{getFileIcon(path)}</span>
+                        <span style={{
+                            flex: 1,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontSize: '13px',
+                        }}>
+                            {file?.name || path}
+                        </span>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 closeFile(path);
                             }}
-                            className="p-0.5 hover:bg-white/10 rounded opacity-60 hover:opacity-100 transition-opacity"
+                            style={{
+                                padding: '2px',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: '#9ca3af',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                opacity: 0.6,
+                            }}
                         >
                             <X size={14} />
                         </button>

@@ -1,58 +1,66 @@
 'use client';
 
 import Link from 'next/link';
-import { Code2, Github, User, LogIn } from 'lucide-react';
+import { Code2, Github } from 'lucide-react';
 
 export function Navbar() {
     return (
-        <nav className="flex items-center justify-between px-6 py-3 bg-gradient-to-r from-gray-900 via-purple-900/50 to-gray-900 border-b border-purple-500/20">
+        <nav style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '8px 16px',
+            background: 'linear-gradient(90deg, #111827, rgba(88, 28, 135, 0.3), #111827)',
+            borderBottom: '1px solid rgba(139, 92, 246, 0.2)',
+            height: '48px',
+            flexShrink: 0,
+        }}>
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-                <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg shadow-purple-500/25 group-hover:shadow-purple-500/40 transition-all duration-300">
-                    <Code2 size={24} className="text-white" />
+            <Link href="/" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                textDecoration: 'none',
+            }}>
+                <div style={{
+                    padding: '6px',
+                    background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Code2 size={18} color="white" />
                 </div>
                 <div>
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                    <h1 style={{
+                        fontSize: '16px',
+                        fontWeight: 700,
+                        color: 'white',
+                        margin: 0,
+                    }}>
                         PHP Playground
                     </h1>
-                    <p className="text-xs text-gray-400">Online PHP IDE</p>
                 </div>
             </Link>
 
-            {/* Navigation Links */}
-            <div className="flex items-center gap-4">
-                <Link
-                    href="/editor"
-                    className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
-                >
-                    Editor
-                </Link>
-                <Link
-                    href="/projects"
-                    className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
-                >
-                    Projects
-                </Link>
+            {/* Right side */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <a
-                    href="https://github.com"
+                    href="https://github.com/ohmiler/remotedevine"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    style={{
+                        padding: '6px',
+                        color: '#9ca3af',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
                 >
-                    <Github size={20} />
+                    <Github size={18} />
                 </a>
-
-                {/* Auth buttons (placeholder for now) */}
-                <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-700">
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors">
-                        <LogIn size={16} />
-                        <span>Login</span>
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg shadow-purple-500/25">
-                        <User size={16} />
-                        <span>Sign Up</span>
-                    </button>
-                </div>
             </div>
         </nav>
     );

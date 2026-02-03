@@ -10,9 +10,9 @@ interface PreviewPanelProps {
 type DeviceSize = 'mobile' | 'tablet' | 'desktop';
 
 const deviceSizes: Record<DeviceSize, { width: string; icon: React.ReactNode }> = {
-    mobile: { width: '375px', icon: <Smartphone size={16} /> },
-    tablet: { width: '768px', icon: <Tablet size={16} /> },
-    desktop: { width: '100%', icon: <Monitor size={16} /> },
+    mobile: { width: '375px', icon: <Smartphone size={14} /> },
+    tablet: { width: '768px', icon: <Tablet size={14} /> },
+    desktop: { width: '100%', icon: <Monitor size={14} /> },
 };
 
 export function PreviewPanel({ html }: PreviewPanelProps) {
@@ -31,7 +31,6 @@ export function PreviewPanel({ html }: PreviewPanelProps) {
         }
     };
 
-    // Create a complete HTML document if not provided
     const fullHtml = html.includes('<!DOCTYPE') || html.includes('<html')
         ? html
         : `<!DOCTYPE html>
@@ -56,24 +55,53 @@ ${html}
 </html>`;
 
     return (
-        <div className="h-full flex flex-col bg-[#1e1e1e]">
+        <div style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#111827',
+        }}>
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700 bg-[#252526]">
-                <div className="flex items-center gap-2 text-gray-400">
-                    <span className="text-sm font-medium">Preview</span>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '8px 12px',
+                borderBottom: '1px solid #374151',
+                backgroundColor: '#1f2937',
+            }}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: '#9ca3af',
+                }}>
+                    <span style={{ fontSize: '13px', fontWeight: 500 }}>Preview</span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {/* Device size toggles */}
-                    <div className="flex items-center bg-gray-700 rounded-lg p-1">
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#374151',
+                        borderRadius: '6px',
+                        padding: '2px',
+                    }}>
                         {(Object.keys(deviceSizes) as DeviceSize[]).map((size) => (
                             <button
                                 key={size}
                                 onClick={() => setDevice(size)}
-                                className={`p-1.5 rounded transition-colors ${device === size
-                                        ? 'bg-purple-500 text-white'
-                                        : 'text-gray-400 hover:text-white'
-                                    }`}
+                                style={{
+                                    padding: '4px 6px',
+                                    borderRadius: '4px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    backgroundColor: device === size ? '#8b5cf6' : 'transparent',
+                                    color: device === size ? 'white' : '#9ca3af',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
                                 title={size.charAt(0).toUpperCase() + size.slice(1)}
                             >
                                 {deviceSizes[size].icon}
@@ -83,42 +111,84 @@ ${html}
 
                     <button
                         onClick={handleRefresh}
-                        className="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-colors"
+                        style={{
+                            padding: '6px',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#9ca3af',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                         title="Refresh preview"
                     >
-                        <RefreshCw size={16} />
+                        <RefreshCw size={14} />
                     </button>
 
                     <button
                         onClick={handleOpenInNewTab}
-                        className="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-colors"
+                        style={{
+                            padding: '6px',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#9ca3af',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                         title="Open in new tab"
                     >
-                        <ExternalLink size={16} />
+                        <ExternalLink size={14} />
                     </button>
                 </div>
             </div>
 
             {/* Preview iframe */}
-            <div className="flex-1 overflow-auto bg-gray-900 p-4 flex justify-center">
+            <div style={{
+                flex: 1,
+                overflow: 'auto',
+                backgroundColor: '#0f172a',
+                padding: '16px',
+                display: 'flex',
+                justifyContent: 'center',
+            }}>
                 <div
-                    style={{ width: deviceSizes[device].width }}
-                    className={`h-full bg-white rounded-lg overflow-hidden shadow-2xl transition-all duration-300 ${device !== 'desktop' ? 'border-4 border-gray-700' : ''
-                        }`}
+                    style={{
+                        width: deviceSizes[device].width,
+                        height: '100%',
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                        border: device !== 'desktop' ? '4px solid #374151' : 'none',
+                    }}
                 >
                     {html ? (
                         <iframe
                             key={key}
                             srcDoc={fullHtml}
-                            className="w-full h-full border-0"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                border: 'none',
+                            }}
                             sandbox="allow-scripts"
                             title="PHP Output Preview"
                         />
                     ) : (
-                        <div className="flex items-center justify-center h-full text-gray-400 bg-gray-100">
-                            <div className="text-center">
-                                <div className="text-4xl mb-4">🖥️</div>
-                                <p className="text-gray-600">Click &quot;Run&quot; to see your PHP output</p>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            backgroundColor: '#f3f4f6',
+                            color: '#6b7280',
+                        }}>
+                            <div style={{ textAlign: 'center' }}>
+                                <div style={{ fontSize: '36px', marginBottom: '12px' }}>🖥️</div>
+                                <p style={{ color: '#4b5563' }}>Click &quot;Run&quot; to see your PHP output</p>
                             </div>
                         </div>
                     )}

@@ -4,9 +4,6 @@ import {
     Play,
     Download,
     RotateCcw,
-    Sun,
-    Moon,
-    Settings,
     Database,
     Terminal,
     Loader2
@@ -22,13 +19,12 @@ interface EditorToolbarProps {
 }
 
 export function EditorToolbar({ onRun, onToggleSQL, showSQL }: EditorToolbarProps) {
-    const { theme, setTheme, isRunning, toggleConsole, isConsoleOpen } = useEditorStore();
+    const { isRunning, toggleConsole, isConsoleOpen } = useEditorStore();
     const { root, resetProject } = useFilesStore();
 
     const handleDownload = async () => {
         const zip = new JSZip();
 
-        // Recursively add files to zip
         const addFilesToZip = (file: VirtualFile, folder: JSZip) => {
             if (file.type === 'file' && file.content !== undefined) {
                 folder.file(file.name, file.content);
@@ -40,7 +36,6 @@ export function EditorToolbar({ onRun, onToggleSQL, showSQL }: EditorToolbarProp
 
         addFilesToZip(root, zip);
 
-        // Generate and download zip
         const blob = await zip.generateAsync({ type: 'blob' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -58,46 +53,80 @@ export function EditorToolbar({ onRun, onToggleSQL, showSQL }: EditorToolbarProp
         }
     };
 
+    const buttonBase: React.CSSProperties = {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '8px 12px',
+        borderRadius: '6px',
+        fontSize: '13px',
+        fontWeight: 500,
+        border: 'none',
+        cursor: 'pointer',
+        transition: 'all 0.15s ease',
+    };
+
+    const iconButtonBase: React.CSSProperties = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '8px',
+        borderRadius: '6px',
+        border: 'none',
+        cursor: 'pointer',
+        background: '#374151',
+        color: '#d1d5db',
+    };
+
     return (
-        <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-gray-700">
+        <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '8px 16px',
+            backgroundColor: '#1f2937',
+            borderBottom: '1px solid #374151',
+            height: '48px',
+            flexShrink: 0,
+        }}>
             {/* Left side - Run controls */}
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
                     onClick={onRun}
                     disabled={isRunning}
-                    className={`
-            flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
-            transition-all duration-200 shadow-lg
-            ${isRunning
-                            ? 'bg-gray-600 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white hover:shadow-green-500/25'
-                        }
-          `}
+                    style={{
+                        ...buttonBase,
+                        background: isRunning
+                            ? '#4b5563'
+                            : 'linear-gradient(135deg, #22c55e, #059669)',
+                        color: 'white',
+                        opacity: isRunning ? 0.7 : 1,
+                        cursor: isRunning ? 'not-allowed' : 'pointer',
+                    }}
                 >
                     {isRunning ? (
                         <>
-                            <Loader2 size={18} className="animate-spin" />
+                            <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
                             <span>Running...</span>
                         </>
                     ) : (
                         <>
-                            <Play size={18} />
+                            <Play size={16} />
                             <span>Run</span>
                         </>
                     )}
                 </button>
 
-                <div className="w-px h-6 bg-gray-700 mx-2" />
+                <div style={{ width: '1px', height: '24px', backgroundColor: '#4b5563', margin: '0 4px' }} />
 
                 <button
                     onClick={onToggleSQL}
-                    className={`
-            flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200
-            ${showSQL
-                            ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }
-          `}
+                    style={{
+                        ...buttonBase,
+                        background: showSQL ? 'rgba(139, 92, 246, 0.2)' : '#374151',
+                        color: showSQL ? '#a78bfa' : '#d1d5db',
+                        border: showSQL ? '1px solid rgba(139, 92, 246, 0.5)' : '1px solid transparent',
+                    }}
                 >
                     <Database size={16} />
                     <span>SQL</span>
@@ -105,42 +134,37 @@ export function EditorToolbar({ onRun, onToggleSQL, showSQL }: EditorToolbarProp
 
                 <button
                     onClick={toggleConsole}
-                    className={`
-            flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200
-            ${isConsoleOpen
-                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }
-          `}
+                    style={{
+                        ...buttonBase,
+                        background: isConsoleOpen ? 'rgba(59, 130, 246, 0.2)' : '#374151',
+                        color: isConsoleOpen ? '#60a5fa' : '#d1d5db',
+                        border: isConsoleOpen ? '1px solid rgba(59, 130, 246, 0.5)' : '1px solid transparent',
+                    }}
                 >
                     <Terminal size={16} />
                     <span>Console</span>
                 </button>
             </div>
 
-            {/* Right side - Settings */}
-            <div className="flex items-center gap-2">
-                <button
-                    onClick={() => setTheme(theme === 'vs-dark' ? 'light' : 'vs-dark')}
-                    className="p-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors"
-                    title={theme === 'vs-dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-                >
-                    {theme === 'vs-dark' ? <Sun size={18} /> : <Moon size={18} />}
-                </button>
-
+            {/* Right side */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
                     onClick={handleReset}
-                    className="p-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors"
+                    style={iconButtonBase}
                     title="Reset project"
                 >
-                    <RotateCcw size={18} />
+                    <RotateCcw size={16} />
                 </button>
 
                 <button
                     onClick={handleDownload}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium text-sm hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+                    style={{
+                        ...buttonBase,
+                        background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+                        color: 'white',
+                    }}
                 >
-                    <Download size={18} />
+                    <Download size={16} />
                     <span>Download ZIP</span>
                 </button>
             </div>

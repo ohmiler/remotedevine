@@ -24,7 +24,7 @@ function FileTreeItem({ file, depth }: FileTreeItemProps) {
     const [isExpanded, setIsExpanded] = useState(depth === 0);
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(file.name);
-    const [showActions, setShowActions] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
 
     const {
         selectedPath,
@@ -86,50 +86,60 @@ function FileTreeItem({ file, depth }: FileTreeItemProps) {
         setIsRenaming(false);
     };
 
-    const getFileIcon = () => {
-        if (isFolder) {
-            return isExpanded ? (
-                <FolderOpen size={16} className="text-yellow-500" />
-            ) : (
-                <Folder size={16} className="text-yellow-500" />
-            );
-        }
-
+    const getFileIconColor = () => {
+        if (isFolder) return '#eab308';
         const ext = file.name.split('.').pop()?.toLowerCase();
-        const iconColors: Record<string, string> = {
-            php: 'text-purple-400',
-            js: 'text-yellow-400',
-            ts: 'text-blue-400',
-            css: 'text-blue-500',
-            html: 'text-orange-500',
-            json: 'text-green-400',
-            sql: 'text-red-400',
-            md: 'text-gray-400',
+        const colors: Record<string, string> = {
+            php: '#a78bfa',
+            js: '#fbbf24',
+            ts: '#3b82f6',
+            css: '#06b6d4',
+            html: '#f97316',
+            json: '#22c55e',
+            sql: '#ef4444',
+            md: '#9ca3af',
         };
-
-        return <File size={16} className={iconColors[ext || ''] || 'text-gray-400'} />;
+        return colors[ext || ''] || '#9ca3af';
     };
 
     return (
         <div>
             <div
-                className={`
-          flex items-center gap-1 px-2 py-1 cursor-pointer select-none
-          hover:bg-white/5 rounded-sm transition-colors duration-150
-          ${isSelected ? 'bg-purple-500/20 text-white' : 'text-gray-300'}
-        `}
-                style={{ paddingLeft: `${depth * 12 + 8}px` }}
                 onClick={handleClick}
-                onMouseEnter={() => setShowActions(true)}
-                onMouseLeave={() => setShowActions(false)}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '4px 8px',
+                    paddingLeft: `${depth * 12 + 8}px`,
+                    cursor: 'pointer',
+                    backgroundColor: isSelected
+                        ? 'rgba(139, 92, 246, 0.2)'
+                        : isHovered
+                            ? 'rgba(255, 255, 255, 0.05)'
+                            : 'transparent',
+                    color: isSelected ? 'white' : '#d1d5db',
+                    borderRadius: '4px',
+                    margin: '1px 4px',
+                    fontSize: '13px',
+                    userSelect: 'none',
+                }}
             >
                 {isFolder && (
-                    <span className="w-4 flex-shrink-0">
+                    <span style={{ width: '16px', display: 'flex', alignItems: 'center' }}>
                         {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                     </span>
                 )}
 
-                <span className="flex-shrink-0">{getFileIcon()}</span>
+                <span style={{ display: 'flex', alignItems: 'center', color: getFileIconColor() }}>
+                    {isFolder ? (
+                        isExpanded ? <FolderOpen size={16} /> : <Folder size={16} />
+                    ) : (
+                        <File size={16} />
+                    )}
+                </span>
 
                 {isRenaming ? (
                     <input
@@ -141,28 +151,62 @@ function FileTreeItem({ file, depth }: FileTreeItemProps) {
                             if (e.key === 'Enter') handleRenameSubmit();
                             if (e.key === 'Escape') setIsRenaming(false);
                         }}
-                        className="flex-1 bg-gray-700 px-1 rounded text-sm outline-none"
+                        style={{
+                            flex: 1,
+                            background: '#374151',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            border: 'none',
+                            outline: 'none',
+                            color: 'white',
+                            fontSize: '13px',
+                        }}
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
                     />
                 ) : (
-                    <span className="flex-1 truncate text-sm">{file.name}</span>
+                    <span style={{
+                        flex: 1,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                    }}>
+                        {file.name}
+                    </span>
                 )}
 
-                {showActions && !isRenaming && !isRoot && (
-                    <div className="flex items-center gap-1 opacity-60 hover:opacity-100">
+                {isHovered && !isRenaming && !isRoot && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                         {isFolder && (
                             <>
                                 <button
                                     onClick={handleCreateFile}
-                                    className="p-1 hover:bg-white/10 rounded"
+                                    style={{
+                                        padding: '4px',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        color: '#9ca3af',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
                                     title="New File"
                                 >
                                     <FilePlus size={14} />
                                 </button>
                                 <button
                                     onClick={handleCreateFolder}
-                                    className="p-1 hover:bg-white/10 rounded"
+                                    style={{
+                                        padding: '4px',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        color: '#9ca3af',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
                                     title="New Folder"
                                 >
                                     <FolderPlus size={14} />
@@ -171,14 +215,32 @@ function FileTreeItem({ file, depth }: FileTreeItemProps) {
                         )}
                         <button
                             onClick={handleRename}
-                            className="p-1 hover:bg-white/10 rounded"
+                            style={{
+                                padding: '4px',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: '#9ca3af',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
                             title="Rename"
                         >
                             <Edit2 size={14} />
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="p-1 hover:bg-red-500/20 rounded text-red-400"
+                            style={{
+                                padding: '4px',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: '#f87171',
+                                borderRadius: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
                             title="Delete"
                         >
                             <Trash2 size={14} />
@@ -191,7 +253,6 @@ function FileTreeItem({ file, depth }: FileTreeItemProps) {
                 <div>
                     {file.children
                         .sort((a, b) => {
-                            // Folders first, then files
                             if (a.type !== b.type) {
                                 return a.type === 'folder' ? -1 : 1;
                             }
@@ -210,19 +271,46 @@ export function FileExplorer() {
     const { root, createFile } = useFilesStore();
 
     return (
-        <div className="h-full flex flex-col bg-[#252526] text-gray-300">
+        <div style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#1f2937',
+            color: '#d1d5db',
+        }}>
             {/* Header */}
-            <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700">
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '8px 12px',
+                borderBottom: '1px solid #374151',
+            }}>
+                <span style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: '#6b7280',
+                }}>
                     Explorer
                 </span>
-                <div className="flex items-center gap-1">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <button
                         onClick={() => {
                             const name = prompt('Enter file name:');
                             if (name) createFile('/', name, 'file');
                         }}
-                        className="p-1 hover:bg-white/10 rounded transition-colors"
+                        style={{
+                            padding: '4px',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#9ca3af',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                         title="New File"
                     >
                         <FilePlus size={16} />
@@ -232,7 +320,16 @@ export function FileExplorer() {
                             const name = prompt('Enter folder name:');
                             if (name) createFile('/', name, 'folder');
                         }}
-                        className="p-1 hover:bg-white/10 rounded transition-colors"
+                        style={{
+                            padding: '4px',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: '#9ca3af',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                         title="New Folder"
                     >
                         <FolderPlus size={16} />
@@ -241,7 +338,11 @@ export function FileExplorer() {
             </div>
 
             {/* File Tree */}
-            <div className="flex-1 overflow-auto py-2">
+            <div style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '8px 0',
+            }}>
                 {root.children?.map((file) => (
                     <FileTreeItem key={file.id} file={file} depth={0} />
                 ))}

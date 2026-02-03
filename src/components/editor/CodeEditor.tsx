@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import { useFilesStore, useEditorStore } from '@/store';
 
@@ -15,12 +15,10 @@ export function CodeEditor() {
     const handleEditorMount: OnMount = (editor) => {
         editorRef.current = editor;
 
-        // Add keyboard shortcuts
         editor.addCommand(
-            // Ctrl+S to save (we just mark as saved since it's auto-saved)
-            2097 /* KeyMod.CtrlCmd */ | 49 /* KeyCode.KeyS */,
+            2097 | 49,
             () => {
-                // Already auto-saved on change
+                // Auto-saved on change
             }
         );
     };
@@ -33,11 +31,18 @@ export function CodeEditor() {
 
     if (!activeFile) {
         return (
-            <div className="flex-1 flex items-center justify-center bg-[#1e1e1e] text-gray-400">
-                <div className="text-center">
-                    <div className="text-6xl mb-4">📝</div>
-                    <p className="text-lg">Select a file to start editing</p>
-                    <p className="text-sm mt-2 text-gray-500">
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#111827',
+                color: '#9ca3af',
+            }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>📝</div>
+                    <p style={{ fontSize: '16px', marginBottom: '8px' }}>Select a file to start editing</p>
+                    <p style={{ fontSize: '13px', color: '#6b7280' }}>
                         Click on a file in the explorer to open it
                     </p>
                 </div>
@@ -46,7 +51,7 @@ export function CodeEditor() {
     }
 
     return (
-        <div className="flex-1 h-full">
+        <div style={{ flex: 1, height: '100%' }}>
             <Editor
                 height="100%"
                 language={language}
@@ -80,11 +85,24 @@ export function CodeEditor() {
                     padding: { top: 16, bottom: 16 },
                 }}
                 loading={
-                    <div className="flex items-center justify-center h-full bg-[#1e1e1e] text-gray-400">
-                        <div className="flex items-center gap-3">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-                            <span>Loading editor...</span>
-                        </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        backgroundColor: '#111827',
+                        color: '#9ca3af',
+                        gap: '12px',
+                    }}>
+                        <div style={{
+                            width: '24px',
+                            height: '24px',
+                            border: '2px solid #8b5cf6',
+                            borderTopColor: 'transparent',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                        }} />
+                        <span>Loading editor...</span>
                     </div>
                 }
             />

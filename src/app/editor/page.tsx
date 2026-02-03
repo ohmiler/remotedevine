@@ -14,22 +14,26 @@ const SQLEditor = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="h-full flex items-center justify-center bg-[#1e1e1e] text-gray-400">
-                <Loader2 className="animate-spin" size={24} />
+            <div style={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#111827',
+                color: '#9ca3af',
+            }}>
+                <Loader2 size={24} style={{ animation: 'spin 1s linear infinite' }} />
             </div>
         ),
     }
 );
 
 export default function EditorPage() {
-
     const [showSQL, setShowSQL] = useState(false);
     const [previewHtml, setPreviewHtml] = useState('');
-    const { activeFile, getFileContent, root } = useFilesStore();
+    const { getFileContent } = useFilesStore();
     const { setIsRunning, addConsoleMessage, clearConsole, isConsoleOpen } = useEditorStore();
 
-    // Simple PHP interpreter simulation (for demo purposes)
-    // In production, you would use php-wasm
     const runPHP = useCallback(() => {
         setIsRunning(true);
         clearConsole();
@@ -37,7 +41,6 @@ export default function EditorPage() {
 
         setTimeout(() => {
             try {
-                // Get the main PHP file content
                 const phpContent = getFileContent('/index.php');
 
                 if (!phpContent) {
@@ -46,21 +49,20 @@ export default function EditorPage() {
                     return;
                 }
 
-                // Simple PHP simulation - in production use php-wasm
-                let output = simulatePHP(phpContent);
+                const output = simulatePHP(phpContent);
 
                 setPreviewHtml(output);
                 addConsoleMessage('output', '✅ Execution completed');
                 addConsoleMessage('info', `📄 Output: ${output.length} characters`);
-            } catch (error: any) {
-                addConsoleMessage('error', `❌ Error: ${error.message}`);
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                addConsoleMessage('error', `❌ Error: ${message}`);
             } finally {
                 setIsRunning(false);
             }
         }, 500);
     }, [getFileContent, setIsRunning, addConsoleMessage, clearConsole]);
 
-    // Auto-run on initial load
     useEffect(() => {
         const timer = setTimeout(() => {
             runPHP();
@@ -69,7 +71,13 @@ export default function EditorPage() {
     }, []);
 
     return (
-        <div className="h-screen flex flex-col bg-[#1e1e1e]">
+        <div style={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#111827',
+            overflow: 'hidden',
+        }}>
             {/* Navbar */}
             <Navbar />
 
@@ -81,32 +89,62 @@ export default function EditorPage() {
             />
 
             {/* Main Content */}
-            <div className="flex-1 flex overflow-hidden">
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                overflow: 'hidden',
+            }}>
                 {/* File Explorer */}
-                <div className="w-64 flex-shrink-0 border-r border-gray-700">
+                <div style={{
+                    width: '240px',
+                    flexShrink: 0,
+                    borderRight: '1px solid #374151',
+                }}>
                     <FileExplorer />
                 </div>
 
                 {/* Editor + Preview */}
-                <div className="flex-1 flex flex-col overflow-hidden">
+                <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                }}>
                     {/* Tabs */}
                     <FileTabs />
 
                     {/* Editor and Preview */}
-                    <div className="flex-1 flex overflow-hidden">
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        overflow: 'hidden',
+                    }}>
                         {/* Code Editor */}
-                        <div className="flex-1 flex flex-col overflow-hidden">
+                        <div style={{
+                            flex: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflow: 'hidden',
+                        }}>
                             <CodeEditor />
                         </div>
 
                         {/* Preview Panel */}
-                        <div className="w-[400px] flex-shrink-0 border-l border-gray-700">
+                        <div style={{
+                            width: '400px',
+                            flexShrink: 0,
+                            borderLeft: '1px solid #374151',
+                        }}>
                             <PreviewPanel html={previewHtml} />
                         </div>
 
                         {/* SQL Editor (conditionally shown) */}
                         {showSQL && (
-                            <div className="w-[400px] flex-shrink-0">
+                            <div style={{
+                                width: '400px',
+                                flexShrink: 0,
+                                borderLeft: '1px solid #374151',
+                            }}>
                                 <SQLEditor isOpen={showSQL} />
                             </div>
                         )}
@@ -114,7 +152,10 @@ export default function EditorPage() {
 
                     {/* Console Panel */}
                     {isConsoleOpen && (
-                        <div className="h-48 flex-shrink-0">
+                        <div style={{
+                            height: '180px',
+                            flexShrink: 0,
+                        }}>
                             <ConsolePanel />
                         </div>
                     )}
@@ -128,16 +169,13 @@ export default function EditorPage() {
 function simulatePHP(code: string): string {
     let output = '';
 
-    // Extract content between <?php and ?> or to end
     const phpMatch = code.match(/<\?php([\s\S]*?)(?:\?>|$)/);
     if (!phpMatch) {
-        return code; // Return as HTML if no PHP
+        return code;
     }
 
     const phpCode = phpMatch[1];
-
-    // Simple variable extraction
-    const variables: Record<string, any> = {};
+    const variables: Record<string, string | string[]> = {};
 
     // Extract simple variable assignments
     const varMatches = phpCode.matchAll(/\$(\w+)\s*=\s*["']([^"']*)["'];/g);
@@ -156,9 +194,8 @@ function simulatePHP(code: string): string {
     const year = new Date().getFullYear().toString();
     variables['year'] = year;
 
-    // Extract echo statements and process them
+    // Extract echo statements
     const echoMatches = phpCode.matchAll(/echo\s+["']([^"']*)["'];|echo\s+["']([^"]*)\$(\w+)([^"']*)["'];/g);
-
     for (const match of echoMatches) {
         if (match[1]) {
             output += match[1];
@@ -180,13 +217,11 @@ function simulatePHP(code: string): string {
     const foreachMatch = phpCode.match(/foreach\s*\(\$(\w+)\s+as\s+\$(\w+)\)\s*\{([^}]+)\}/);
     if (foreachMatch) {
         const arrayName = foreachMatch[1];
-        const itemVar = foreachMatch[2];
         const loopBody = foreachMatch[3];
 
         const arr = variables[arrayName];
         if (Array.isArray(arr)) {
             for (const item of arr) {
-                // Extract echo in loop body
                 const loopEchoMatch = loopBody.match(/echo\s+["']<(\w+)>\$\w+<\/\1>["'];/);
                 if (loopEchoMatch) {
                     const tag = loopEchoMatch[1];
@@ -203,14 +238,12 @@ function simulatePHP(code: string): string {
         const prefix = funcMatch[3];
         const suffix = funcMatch[4];
 
-        // Find function calls
         const callMatch = phpCode.match(new RegExp(`echo\\s+["']<p>["']\\s*\\.\\s*${funcName}\\s*\\(["']([^"']+)["']\\)\\s*\\.\\s*["']</p>["'];`));
         if (callMatch) {
             output += `<p>${prefix}${callMatch[1]}${suffix}</p>`;
         }
     }
 
-    // If no output was generated, return a simple message
     if (!output.trim()) {
         output = `<div style="padding: 20px; font-family: system-ui;">
       <h1 style="color: #8b5cf6;">🐘 PHP Playground</h1>
